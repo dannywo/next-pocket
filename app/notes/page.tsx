@@ -1,8 +1,11 @@
 import Link from "next/link";
+import PocketBase from 'pocketbase';
 
 async function getNotes(){
-    const response = await fetch('http://127.0.0.1:8090/api/collections/notes/records?page=1&perPage=30',{cache: 'no-store'});
-    const data = await response.json();
+    // const response = await fetch('http://127.0.0.1:8090/api/collections/notes/records?page=1&perPage=30',{cache: 'no-store'});
+    // const data = await response.json();
+    const db = new PocketBase('http://127.0.0.1:8090');
+    const data = await db.collection('notes').getList(1,30);
     console.log(data)
     return data?.items as any[];
 }
