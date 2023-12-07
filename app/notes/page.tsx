@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PocketBase from 'pocketbase';
+import CreateNote from "./createNote";
 
 //Next.js caching settings, necessary if not using fetch.
 export const dynamic = 'auto',
@@ -9,31 +10,33 @@ export const dynamic = 'auto',
     runtime = 'nodejs',
     preferredRegion = 'auto';
 
-async function getNotes(){
+async function getNotes() {
     // const response = await fetch('http://127.0.0.1:8090/api/collections/notes/records?page=1&perPage=30',{cache: 'no-store'});
     // const data = await response.json();
     const db = new PocketBase('http://127.0.0.1:8090');
-    const data = await db.collection('notes').getList(1,30);
+    const data = await db.collection('notes').getList(1, 30);
     console.log(data);
     return data?.items as any[];
 }
 
-export default async function NotesPage(){
+export default async function NotesPage() {
     const notes = await getNotes();
     return (
         <div>
             <h1>Notes</h1>
             <div>
-                {notes?.map((note)=>{
-                    return <Note key={note.id} note={note}/>
+                {notes?.map((note) => {
+                    return <Note key={note.id} note={note} />
                 })}
             </div>
+
+            <CreateNote />
         </div>
     )
 }
 
-function Note({note}:any){
-    const{id, title, content, created } = note || {};
+function Note({ note }: any) {
+    const { id, title, content, created } = note || {};
 
     return (
         <Link href={`/notes/${id}`}>
